@@ -1,0 +1,38 @@
+
+
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html" charset="utf-8" />
+	<title>3D Game Design</title>
+		<script src="cannon.js"></script>
+		<script src="babylon.js"></script>
+		<script src="babylon.objFileLoader.min.js"></script> 
+		<script> 
+
+			function start(){
+				//ALL YOUR CODE GOES IN HERE
+
+				var canvas = document.getElementById('renderCanvas'); 
+				var engine = new BABYLON.Engine(canvas, true); 
+				var scene = new BABYLON.Scene(engine); 
+
+			//NEW CODE BELOW 
+			scene.clearColor = new BABYLON.Color3.Yellow(); 
+
+			// OR - They both change the background color! 
+
+			scene.clearColor = new BABYLON.Color3(0.5, 0.8, 0.5); 
+
+			//END OF NEW CODE 
+
+			engine.runRenderLoop(scene.render.bind(scene));
+				window.addEventListener('resize', engine.resize.bind(engine)); 
+			}
+
+		</script> 
+
+</head> 
+	<body> 
+
+	</body> 
+</html> 
