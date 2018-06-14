@@ -39,11 +39,9 @@
 			scene.clearColor = new BABYLON.Color3(0.5, 0.8, 0.5);
 
 			//===TRACK CODE===//
-var _xFn = function(t) {var fns = [function(t) {return (Math.pow((1-t),3)*0.4925)+(3*t*Math.pow((1-t),2)*0.5425)+(3*Math.pow(t,2)*(1-t)*0.8)+(Math.pow(t,3)*0.47)}];var i = Math.max(0,Math.min(0, Math.floor(t * 1)));return fns[i]((t - (i/1)) * 1);};
-
-var _yFn = function(t) {var fns = [function(t) {return (Math.pow((1-t),3)*0.3928125)+(3*t*Math.pow((1-t),2)*0.1103125)+(3*Math.pow(t,2)*(1-t)*0.1153125)+(Math.pow(t,3)*0.3128125)}];var i = Math.max(0,Math.min(0, Math.floor(t * 1)));return fns[i]((t - (i/1)) * 1);};
+var _xFn = function(t) {var fns = [function(t) {return (Math.pow((1-t),3)*0.305)+(3*t*Math.pow((1-t),2)*0.235)+(3*Math.pow(t,2)*(1-t)*0.555)+(Math.pow(t,3)*0.575)},function(t) {return (Math.pow((1-t),3)*0.575)+(3*t*Math.pow((1-t),2)*0.595)+(3*Math.pow(t,2)*(1-t)*0.3575)+(Math.pow(t,3)*0.295)},function(t) {return (Math.pow((1-t),3)*0.295)+(3*t*Math.pow((1-t),2)*0.2325)+(3*Math.pow(t,2)*(1-t)*0.62)+(Math.pow(t,3)*0.585)},function(t) {return (Math.pow((1-t),3)*0.585)+(3*t*Math.pow((1-t),2)*0.55)+(3*Math.pow(t,2)*(1-t)*0.5075)+(Math.pow(t,3)*0.12)}];var i = Math.max(0,Math.min(3, Math.floor(t * 4)));return fns[i]((t - (i/4)) * 4);};
+var _yFn = function(t) {var fns = [function(t) {return (Math.pow((1-t),3)*0.2803125)+(3*t*Math.pow((1-t),2)*0.0253125)+(3*Math.pow(t,2)*(1-t)*0.0253125)+(Math.pow(t,3)*0.2728125)},function(t) {return (Math.pow((1-t),3)*0.2728125)+(3*t*Math.pow((1-t),2)*0.5203125)+(3*Math.pow(t,2)*(1-t)*0.4753125)+(Math.pow(t,3)*0.7303125)},function(t) {return (Math.pow((1-t),3)*0.7303125)+(3*t*Math.pow((1-t),2)*0.9853125)+(3*Math.pow(t,2)*(1-t)*0.8253125)+(Math.pow(t,3)*0.6928125)},function(t) {return (Math.pow((1-t),3)*0.6928125)+(3*t*Math.pow((1-t),2)*0.5603125)+(3*Math.pow(t,2)*(1-t)*0.5628125)+(Math.pow(t,3)*0.2453125)}];var i = Math.max(0,Math.min(3, Math.floor(t * 4)));return fns[i]((t - (i/4)) * 4);};
 /* START CURVE DATA 
-
 {"start":[33,30.125],"init":[328,346.125],"segments":[{"a":[326,41.125],"b":[248,19.125]},{"a":[70,119.125],"b":[203,147.125]},{"a":[264,75.125],"b":[257,52.125]},{"a":[178,11.125],"b":[168,83.125]},{"a":[240,142.125],"b":[258,110.125]},{"a":[242,54.125],"b":[219,47.125]},{"a":[176,62.125],"b":[187,98.125]},{"a":[233,124.125],"b":[246,96.125]},{"a":[227,49.125],"b":[201,58.125]},{"a":[202,112.125],"b":[215,105.125]},{"a":[242,100.125],"b":[231,73.125]},{"a":[196,66.125],"b":[215,88.125]}]}
 
    END CURVE DATA */
@@ -66,37 +64,7 @@ var _yFn = function(t) {var fns = [function(t) {return (Math.pow((1-t),3)*0.3928
 
 
 			playerSphere.physicsImpostor = new BABYLON.PhysicsImpostor(playerSphere, BABYLON.PhysicsImpostor.SphereImpostor, {
-				
-			BABYLON.SceneLoader.ImportMesh(null, "resources/", "speed.obj", scene, function(meshes) {
-			var boostMesh = meshes[0], boosts = [];
-			boostMesh.material = new BABYLON.StandardMaterial("boostMaterial", scene);
-			boostMesh.material.diffuseColor = new BABYLON.Color3(1, 1, 0);
-			boostMesh.scaling = new BABYLON.Vector3(5, 5, 5);
-			boostMesh.setEnabled(false);
-			function boostAt(xFn, zFn, t) {
-			var newBoost = boostMesh.clone('boost');
-			newBoost.position = new BABYLON.Vector3(xFn(t), 3.2, zFn(t));
-			newBoost.rotation.y = -derivAngle(t, xFn, zFn);
-			newBoost.setEnabled(true);
-			boosts.push(newBoost);
-			}
 
-			// Place boosts here
-			boostAt(xFn, zFn, 0.05);
-
-			scene.registerAfterRender(function() {
-			boosts.forEach(function(boost, i){
-			if(boost.intersectsMesh(playerSphere)){
-			boost.dispose();
-			boosts.splice(i,1);
-			var vel = playerSphere.physicsImpostor.getLinearVelocity();
-			playerSphere.applyImpulse(vel.normalize().scale(100), playerSphere.getAbsolutePosition());
-			} else {
-			boost.rotation.y += 0.01
-			}
-			});
-			});
-			}); 
 
 			mass: 1,
 
@@ -108,10 +76,15 @@ var _yFn = function(t) {var fns = [function(t) {return (Math.pow((1-t),3)*0.3928
 			camera.attachControl(canvas, true);
 
 			var light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), scene);
-			rampAt(xFn, zFn, 0.13, -Math.PI / 4, scene);
+
+			rampAt(xFn, zFn, 0.89, -Math.PI / 4, scene);
 			 
 
-			wallAt(xFn, zFn, 0.01, -6.1, scene);
+			wallAt(xFn, zFn, 0.20, -6.1, scene);
+
+			var startTime;
+			var timer = document.querySelector('#timer');
+
 			scene.registerAfterRender(function() { 
 
 				
@@ -142,6 +115,8 @@ var _yFn = function(t) {var fns = [function(t) {return (Math.pow((1-t),3)*0.3928
 				
 
 				if (keys.w) {
+
+				if(!startTime){ startTime = Date.now(); } 
 
 				playerSphere.applyImpulse(forward, playerSphere.getAbsolutePosition());
 
@@ -181,6 +156,11 @@ camera.alpha += (angle - camera.alpha) / 32;
 				if (playerSphere.position.y < -10) {
 					lost();
 				} 
+
+			if(startTime) {
+			timer.innerHTML = ((Date.now() - startTime) / 1000).toFixed(2).replace('.',':');
+			} 
+
 			});	
 			function drawPoint(x, z, zrot, scene) {
 
@@ -210,7 +190,7 @@ camera.alpha += (angle - camera.alpha) / 32;
 			}
 
 			} 
-			 drawParametric(xFn, zFn, 0, 1, 100, scene); 
+			 drawParametric(xFn, zFn, 0, 1, 700, scene); 
 			function tLookup(xFn, zFn, res, x, z) {
 
 			var minT = 0;
@@ -358,11 +338,20 @@ camera.alpha += (angle - camera.alpha) / 32;
         				touch-action: none;
         
         			}
+        			#timer {
+position: absolute;
+left:10px;
+bottom:10px;
+color:#ccc;
+font: 52px sans-serif;
+} 
     </style>
 </head>
 
 <body onload="start()">
     <canvas id="renderCanvas"></canvas>
+
+    <div id="timer">00:00</div> 
 </body>
 
 </html>
