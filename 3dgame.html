@@ -36,7 +36,7 @@
 
 
 
-			scene.clearColor = new BABYLON.Color3(0, 0, 0);
+			scene.clearColor = new BABYLON.Color3(1, 1, 1);
 
 			//===TRACK CODE===//
 var _xFn = function(t) {var fns = [function(t) {return (Math.pow((1-t),3)*0.025)+(3*t*Math.pow((1-t),2)*0.18)+(3*Math.pow(t,2)*(1-t)*0.3525)+(Math.pow(t,3)*0.56)},function(t) {return (Math.pow((1-t),3)*0.56)+(3*t*Math.pow((1-t),2)*0.7675)+(3*Math.pow(t,2)*(1-t)*0.095)+(Math.pow(t,3)*0.1275)},function(t) {return (Math.pow((1-t),3)*0.1275)+(3*t*Math.pow((1-t),2)*0.16)+(3*Math.pow(t,2)*(1-t)*0.8725)+(Math.pow(t,3)*0.7325)},function(t) {return (Math.pow((1-t),3)*0.7325)+(3*t*Math.pow((1-t),2)*0.5925)+(3*Math.pow(t,2)*(1-t)*0.845)+(Math.pow(t,3)*0.88)},function(t) {return (Math.pow((1-t),3)*0.88)+(3*t*Math.pow((1-t),2)*0.915)+(3*Math.pow(t,2)*(1-t)*0.575)+(Math.pow(t,3)*0.7775)},function(t) {return (Math.pow((1-t),3)*0.7775)+(3*t*Math.pow((1-t),2)*0.98)+(3*Math.pow(t,2)*(1-t)*0.4775)+(Math.pow(t,3)*0.17)},function(t) {return (Math.pow((1-t),3)*0.17)+(3*t*Math.pow((1-t),2)*-0.1375)+(3*Math.pow(t,2)*(1-t)*0.255)+(Math.pow(t,3)*0.255)},function(t) {return (Math.pow((1-t),3)*0.255)+(3*t*Math.pow((1-t),2)*0.255)+(3*Math.pow(t,2)*(1-t)*0.0075)+(Math.pow(t,3)*0.3975)},function(t) {return (Math.pow((1-t),3)*0.3975)+(3*t*Math.pow((1-t),2)*0.7875)+(3*Math.pow(t,2)*(1-t)*0.1475)+(Math.pow(t,3)*0.025)}];var i = Math.max(0,Math.min(8, Math.floor(t * 9)));return fns[i]((t - (i/9)) * 9);};
@@ -85,7 +85,7 @@ var _yFn = function(t) {var fns = [function(t) {return (Math.pow((1-t),3)*0.2)+(
 		}
 
 		// Place boosts here
-		
+		boostAt(xFn, zFn, 0.07);
 
 		scene.registerAfterRender(function() {
 		boosts.forEach(function(boost, i){
@@ -96,15 +96,47 @@ var _yFn = function(t) {var fns = [function(t) {return (Math.pow((1-t),3)*0.2)+(
 			playerSphere.applyImpulse(vel.normalize().scale(100), playerSphere.getAbsolutePosition());
 		} 
 		else {
-		boost.rotation.y += 0.01
+		boost.rotation.y += 0.05
+		}
+	});
+	});
+	}); 
+/*
+		BABYLON.SceneLoader.ImportMesh(null, "resources/", "bounce.obj", scene, function(meshes) {
+			var bounceMesh = meshes[0], bounce = [];
+			bounceMesh.material = new BABYLON.StandardMaterial("bounceMaterial", scene);
+			bounceMesh.material.diffuseColor = new BABYLON.Color3(0, 0, 0);
+			bounceMesh.scaling = new BABYLON.Vector3(5, 5, 5);
+			bounceMesh.setEnabled(false);
+			function bounceAt(xFn, zFn, t) {
+			var newBouncse = bounceMesh.clone('bounce');
+			newBounce.position = new BABYLON.Vector3(xFn(t), 3.2, zFn(t));
+			newBounce.rotation.y = -derivAngle(t, xFn, zFn);
+			newBounce.setEnabled(true);
+			bounces.push(newBounce);
+		}
+
+		// Place bounces here
+		bounceAt(xFn, zFn, 0.07);
+
+		scene.registerAfterRender(function() {
+		bounces.forEach(function(bounce, i){
+		if(bounce.intersectsMesh(playerSphere)){
+			bounce.dispose();
+			bounces.splice(i,1);
+			var vel = playerSphere.physicsImpostor.getLinearVelocity();
+			playerSphere.applyImpulse(vel.normalize().scale(100), playerSphere.getAbsolutePosition());
+		} 
+		else {
+		bounce.rotation.y += 0.05
 		}
 	});
 	});
 	}); 
 
-
+*/
 			var camera = new BABYLON.ArcRotateCamera("Camera", 0, (3 * Math.PI) / 8, 20, playerSphere, scene); 
-			camera.attachControl(canvas, true);
+			//camera.attachControl(canvas, true);
 
 			var light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), scene);
 
